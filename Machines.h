@@ -243,7 +243,7 @@ FST::NODE(1,FST::RELATION('/',0),\
 FST::NODE(1, FST::RELATION('=',0),\
 			 FST::NODE())
 
-#define AMOUNTLEXEM 21
+#define AMOUNTLEXEM 10
 #define ALL_MACHINES \
 FST::FST Integer(FST_INTEGER);\
 FST::FST String(FST_STRING);\
@@ -255,6 +255,10 @@ FST::FST Main(FST_MAIN);\
 FST::FST Identificator(FST_IDENTIFICATOR);\
 FST::FST NumberLiteral(FST_NUMBLITERAL);\
 FST::FST STRLiteral(FST_STRLITERAL);\
+FST::FST CHOOSINGMACHINE[AMOUNTLEXEM] = {Integer, String, Function, Declare, Return, Print,Main,NumberLiteral,STRLiteral,Identificator};
+
+#define AMOUNT_OPERATIONS 11
+#define OPERATIONS_MACHINES \
 FST::FST Braceleft(BRACELEFT); \
 FST::FST Leftbrace(LEFTBRACE);\
 FST::FST Semicolon(SEMICOLON);\
@@ -266,8 +270,7 @@ FST::FST Minus(MINUS);\
 FST::FST Star(STAR);\
 FST::FST Dirslash(DIRSLASH);\
 FST::FST Equals(EQUALS);\
-FST::FST CHOOSINGMACHINE[AMOUNTLEXEM] = {Integer, String, Function, Declare, Return, Print,Main,NumberLiteral,STRLiteral,Identificator, Braceleft,Leftbrace, Semicolon,Comma, Lefthesis, Reighthesis, Plus, Minus, Star, Dirslash,Equals};
-
+FST::FST CHOOSING_OPERATION[AMOUNT_OPERATIONS] = { Braceleft,Leftbrace, Semicolon,Comma, Lefthesis, Reighthesis, Plus, Minus, Star, Dirslash,Equals};
 bool changingMachine(char* word, In::IN in , LT::LexTable& lextable, IT::IdTable& idtable, FST::FST machine, int kindOfMachine);
 void inputToIdTable(IT::IdTable& idtable,In::IN in, IT::IDDATATYPE dataType, char* word, bool* isTypeOfId);
 void inputToIdTable(IT::IdTable& idtable,In::IN in ,IT::IDDATATYPE dataType, char* word, IT::IDTYPE);

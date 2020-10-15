@@ -81,7 +81,7 @@ void choiceOfMachines(int wordSize, In::IN in, LT::LexTable& lextable, IT::IdTab
 	//просто в статическую переменную
 	bool Disassembled = false;
 	ALL_MACHINES;
-	for (int kindOfMachine = 0; kindOfMachine < AMOUNTLEXEM/2 && !Disassembled; kindOfMachine++)
+	for (int kindOfMachine = 0; kindOfMachine < AMOUNTLEXEM && !Disassembled; kindOfMachine++)
 	{
 		Disassembled = changingMachine(word,in,lextable,idtable,CHOOSINGMACHINE[kindOfMachine],kindOfMachine);
 	}
@@ -91,9 +91,9 @@ void choiceOfMachines(char symbol, In::IN in, LT::LexTable& lextable, IT::IdTabl
 	char word[2];
 	word[0] = symbol; word[1] = '\0';
 	bool Disassembled = false;
-	ALL_MACHINES;
-	for (int kindOfExpression = AMOUNTLEXEM/2; kindOfExpression < AMOUNTLEXEM && !Disassembled; kindOfExpression++)
+	OPERATIONS_MACHINES;
+	for (int kindOfExpression = 0; kindOfExpression < AMOUNT_OPERATIONS && !Disassembled; kindOfExpression++)
 	{
-		Disassembled = changingMachine(word, in, lextable, idtable, CHOOSINGMACHINE[kindOfExpression], kindOfExpression);
+		Disassembled = changingMachine(word, in, lextable, idtable, CHOOSING_OPERATION[kindOfExpression], kindOfExpression + AMOUNTLEXEM);
 	}
 }
