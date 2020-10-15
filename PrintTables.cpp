@@ -58,11 +58,8 @@ void PrintIDTable(IT::IdTable idtable)
 	{
 		stream.width(5);
 		stream << i + 1;
-		stream.width(25);
-		/*stream << idtable.table[i].prefix;//подумать, как возвращать с ::
-		stream << "::";*/
-		stream << idtable.table[i].id;
-		stream.width(20);
+		PrintPrefix(idtable.table[i], stream);
+		stream.width(22);
 		stream << ReturnIddatatype(idtable.table[i].iddatatype);
 		stream.width(20);
 		stream << ReturnIdType(idtable.table[i].idtype);
@@ -72,6 +69,25 @@ void PrintIDTable(IT::IdTable idtable)
 		stream << ReturnValue(idtable.table[i]);
 		stream << '\n';
 	}
+}
+void PrintNameId(IT::Entry currentElem,std::ofstream& stream)
+{
+	if (currentElem.id[0] == '\0' && currentElem.outsideFunction[0] != '\0')
+		stream << currentElem.outsideFunction;
+	else if (currentElem.id[0] != '\0' && currentElem.outsideFunction[0] == '\0')
+		stream << currentElem.id;
+}
+void PrintPrefix(IT::Entry currentElem, std::ofstream& stream)
+{
+	if (currentElem.prefix[0] != '\0' && currentElem.id)
+	{
+		stream.width(20);
+		stream << currentElem.prefix;
+		stream << "::";
+	}
+	else
+		stream.width(20);
+	PrintNameId(currentElem, stream);
 }
 //const char* PrintPrefix(IT::IdTable idtable)
 //{

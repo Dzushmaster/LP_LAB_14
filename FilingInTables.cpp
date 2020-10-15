@@ -2,11 +2,11 @@
 #include "IT.h"
 #include "LT.h"
 #include "PrintTables.h"
-char* inputWord()
-{
-
-}
-void inputToIdTable(IT::IdTable& idtable,In::IN in, IT::IDDATATYPE dataType, char* word, bool* IntStrFunVarMain, bool& isBraceLeft)
+//char* inputWord()
+//{
+//
+//}
+void inputToIdTable(IT::IdTable& idtable,In::IN in, IT::IDDATATYPE dataType, char* word, bool* IntStrFunVarMain)
 {
 	IT::Entry partOfTable;
 	partOfTable.iddatatype = dataType;
@@ -17,17 +17,25 @@ void inputToIdTable(IT::IdTable& idtable,In::IN in, IT::IDDATATYPE dataType, cha
 	{
 		partOfTable.value.vstr->ken = 0;
 		partOfTable.value.vstr->str[0] = TI_STR_DEFAULT;
-		//partOfTable.value.vstr->str[0] = TI_STR_DEFAULT;
 	}
 	else if (IT::F != partOfTable.idtype || IT::O != partOfTable.idtype)
 		partOfTable.value.vint = TI_INT_DEFAULT;
-	DefineScope(partOfTable, isBraceLeft, IntStrFunVarMain);
+	DefineScope(partOfTable, IntStrFunVarMain);
 	IT::Add(idtable, partOfTable);
 	//in.textAfterLex[in.sizeAfterLex++] = 'i';
 }
 void defineIdName(IT::Entry& partOfTable, char* word)//заменить переменную, в которую записывается значение
 {
-	partOfTable.idtype == IT::P? strncpy_s(partOfTable.id,word,10): strncpy_s(partOfTable.id, word, 5);
+	//partOfTable.idtype == IT::P? strncpy_s(partOfTable.prefix,word,PREFIX_SIZE): strncpy_s(partOfTable.id, word, 5) && partOfTable.prefix = '\0';
+	if (partOfTable.idtype == IT::O)
+	{
+		strncpy_s(partOfTable.outsideFunction, word, PREFIX_SIZE);
+		partOfTable.id[0] = '\0';
+		return;
+	}
+	strncpy_s(partOfTable.id, word, ID_MAXSIZE + 1);
+	partOfTable.outsideFunction[0] = '\0';
+
 }
 void inputToIdTable(IT::IdTable& idtable,In::IN in ,IT::IDDATATYPE iddatatype, char* word, IT::IDTYPE idtype)
 {
@@ -43,6 +51,8 @@ void inputToIdTable(IT::IdTable& idtable,In::IN in ,IT::IDDATATYPE iddatatype, c
 	partOfTable.iddatatype = iddatatype;
 	partOfTable.idtype = idtype;
 	partOfTable.id[0] = '\0';
+	partOfTable.prefix[0] = '\0';
+	partOfTable.outsideFunction[0] = '\0';
 	partOfTable.idxfirstLE = in.lines;
 	IT::Add(idtable, partOfTable);
 }
@@ -58,24 +68,23 @@ IT::IDTYPE typeofId(bool* IntStrFunVarMain)
 	return IT::IDTYPE::P;							//параметр
 }
 
-void DefineScope(IT::Entry& partOfTable, bool& isBraceLeft, bool* IntStrFunVarMain)
+void DefineScope(IT::Entry& partOfTable, bool* IntStrFunVarMain)
 {
 	static char nameFunction[PREFIX_SIZE];
 	if ((IntStrFunVarMain[2] && !IntStrFunVarMain[3]))//возможно, заменить на функцию
 	{
 		strncpy_s(nameFunction, partOfTable.id, 10);
-		isBraceLeft = false; IntStrFunVarMain[2] = false;
+		IntStrFunVarMain[2] = false;
 		partOfTable.prefix[0] = NULL;
 		return;
 	}
 	if (IntStrFunVarMain[4])
 	{
 		strncpy_s(nameFunction, "main", 4);
-		isBraceLeft = false; IntStrFunVarMain[4] = false;
+		IntStrFunVarMain[4] = false;
 		strncpy_s(partOfTable.prefix, nameFunction, PREFIX_SIZE);
 		return;
 	}
-	if (isBraceLeft) { isBraceLeft = false; return; }			//проверить этот фрагмент кода
 	strncpy_s(partOfTable.prefix, nameFunction, PREFIX_SIZE);
 }
 
@@ -93,7 +102,6 @@ void inputToLexTable(LT::LexTable& lextable, In::IN in, char lexem)//работает
 bool changingMachine(char* word, In::IN  line, LT::LexTable& lextable, IT::IdTable& idtable, FST::FST machine, int kindOfMachine)
 {
 	static bool IntStrFunVarMain[5] = { false,false,false,false,false };
-	static bool isBraceLeft = false;
 	if (!FST::execute(machine))
 		return false;
 	switch (kindOfMachine)
@@ -133,7 +141,7 @@ bool changingMachine(char* word, In::IN  line, LT::LexTable& lextable, IT::IdTab
 	case 9:
 		if (IntStrFunVarMain[0])
 		{
-			inputToIdTable(idtable,line ,IT::IDDATATYPE::INT, word, IntStrFunVarMain, isBraceLeft);
+			inputToIdTable(idtable,line ,IT::IDDATATYPE::INT, word, IntStrFunVarMain);
 			IntStrFunVarMain[0] = false;
 			IntStrFunVarMain[2] = false;
 			IntStrFunVarMain[3] = false;
@@ -141,7 +149,7 @@ bool changingMachine(char* word, In::IN  line, LT::LexTable& lextable, IT::IdTab
 		}
 		if (IntStrFunVarMain[1])
 		{
-			inputToIdTable(idtable,line ,IT::IDDATATYPE::STR, word, IntStrFunVarMain, isBraceLeft);
+			inputToIdTable(idtable,line ,IT::IDDATATYPE::STR, word, IntStrFunVarMain);
 			IntStrFunVarMain[1] = false;
 			IntStrFunVarMain[2] = false;
 			IntStrFunVarMain[3] = false;
@@ -151,7 +159,6 @@ bool changingMachine(char* word, In::IN  line, LT::LexTable& lextable, IT::IdTab
 	
 	case 10:
 		inputToLexTable(lextable, line, LEX_BRACELEFT);
-		isBraceLeft = true;
 		return true;
 	case 11:
 		inputToLexTable(lextable, line, LEX_LEFTBRACE);

@@ -251,9 +251,9 @@ FST::FST Function(FST_FUNCTION);\
 FST::FST Declare(FST_DECLARE);\
 FST::FST Return(FST_RETURN);\
 FST::FST Print(FST_PRINT);\
+FST::FST Main(FST_MAIN);\
 FST::FST Identificator(FST_IDENTIFICATOR);\
 FST::FST NumberLiteral(FST_NUMBLITERAL);\
-FST::FST Main(FST_MAIN);\
 FST::FST STRLiteral(FST_STRLITERAL);\
 FST::FST Braceleft(BRACELEFT); \
 FST::FST Leftbrace(LEFTBRACE);\
@@ -269,9 +269,9 @@ FST::FST Equals(EQUALS);\
 FST::FST CHOOSINGMACHINE[AMOUNTLEXEM] = {Integer, String, Function, Declare, Return, Print,Main,NumberLiteral,STRLiteral,Identificator, Braceleft,Leftbrace, Semicolon,Comma, Lefthesis, Reighthesis, Plus, Minus, Star, Dirslash,Equals};
 
 bool changingMachine(char* word, In::IN in , LT::LexTable& lextable, IT::IdTable& idtable, FST::FST machine, int kindOfMachine);
-void inputToIdTable(IT::IdTable& idtable,In::IN in, IT::IDDATATYPE dataType, char* word, bool* isTypeOfId, bool&);
+void inputToIdTable(IT::IdTable& idtable,In::IN in, IT::IDDATATYPE dataType, char* word, bool* isTypeOfId);
 void inputToIdTable(IT::IdTable& idtable,In::IN in ,IT::IDDATATYPE dataType, char* word, IT::IDTYPE);
-void DefineScope(IT::Entry&, bool&, bool*);
+void DefineScope(IT::Entry&, bool*);
 void inputToLexTable(LT::LexTable& lextable, In::IN in, char lexem);
 IT::IDTYPE typeofId(bool* isTypeOfId);
 void defineIdName(IT::Entry&, char*);

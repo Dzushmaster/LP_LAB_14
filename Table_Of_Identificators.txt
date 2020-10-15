@@ -1,0 +1,30 @@
+Размер таблицы идентификаторов: 28
+Номер идентификатора -> Идентификатор -> Тип данных -> Тип идентификатора -> Нечто -> Значение
+    1                  fi               integer            function         1          
+    2                  fi::x               integer           parameter         1         0
+    3                  fi::y               integer           parameter         1         0
+    4                  fi::z               integer            variable         3         0
+    5                  fs                string            function         8          
+    6                  fs::a                string           parameter         8-859045888
+    7                  fs::b                string           parameter         8-859045888
+    8                  fs::c                string            variable        10-859045888
+    9                  fs::substr                string    outside function        11-859045888
+   10                  fs::a                string           parameter        11-859045888
+   11                  fs::p               integer           parameter        11         0
+   12                  fs::n               integer           parameter        12         0
+   13               integer             literal        13         1
+   14               integer             literal        13         3
+   15                main::x               integer            variable        18         0
+   16                main::y               integer            variable        19         0
+   17                main::z               integer            variable        20         0
+   18                main::sa                string            variable        21-859045888
+   19                main::sb                string            variable        22-859045888
+   20                main::sc                string            variable        23-859045888
+   21                main::strlen               integer    outside function        24         0
+   22                main::p                string           parameter        24-859045888
+   23               integer             literal        25         1
+   24               integer             literal        26         5
+   25                string             literal        27-842150641
+   26                string             literal        28-842150641
+   27                string             literal        31-842150633
+   28               integer             literal        35         0

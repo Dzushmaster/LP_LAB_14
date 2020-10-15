@@ -111,7 +111,7 @@ IN In::getin(wchar_t inFile[],LT::LexTable& lextable, IT::IdTable& idtable)
 			CurrentPosition = 0;
 			in.size++;
 			isWord = false;
-			continue;
+			break;
 		}
 		if (!isWord)
 		{
