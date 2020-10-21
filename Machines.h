@@ -199,47 +199,47 @@ FST::NODE(37, FST::RELATION('a',2),\
 FST::NODE(1,FST::RELATION('\'',3)),\
 FST::NODE()
 
-#define SEMICOLON word,1,\
+#define PARSE_SEMICOLON word,1,\
 FST::NODE(1,FST::RELATION(';',0),\
 			FST::NODE())
 
-#define COMMA word,1,\
+#define PARSE_COMMA word,1,\
 FST::NODE(1,FST::RELATION(',',0),\
 			FST::NODE())
 
-#define LEFTBRACE word,1,\
+#define PARSE_LEFTBRACE word,1,\
 FST::NODE(1,FST::RELATION('{',0),\
 			FST::NODE())
 
-#define BRACELEFT word,1,\
+#define PARSE_BRACELEFT word,1,\
 FST::NODE(1,FST::RELATION('}',0),\
 			FST::NODE())
 
-#define LEFTHESIS word,1,\
+#define PARSE_LEFTHESIS word,1,\
 FST::NODE(1,FST::RELATION('(',0),\
 			FST::NODE())
 
-#define REIGHTHESIS word,1,\
+#define PARSE_REIGHTHESIS word,1,\
 FST::NODE(1,FST::RELATION(')',0),\
 			FST::NODE())
 
-#define PLUS word,1,\
+#define PARSE_PLUS word,1,\
 FST::NODE(1,FST::RELATION('+',0),\
 			FST::NODE())
 
-#define MINUS word,1,\
+#define PARSE_MINUS word,1,\
 FST::NODE(1,FST::RELATION('-',0),\
 			FST::NODE())
 
-#define STAR word,1,\
+#define PARSE_STAR word,1,\
 FST::NODE(1,FST::RELATION('*',0),\
 			FST::NODE())
 
-#define DIRSLASH word,1,\
+#define PARSE_DIRSLASH word,1,\
 FST::NODE(1,FST::RELATION('/',0),\
 			FST::NODE())
 
-#define EQUALS word, 1,\
+#define PARSE_EQUALS word, 1,\
 FST::NODE(1, FST::RELATION('=',0),\
 			 FST::NODE())
 
@@ -259,23 +259,22 @@ FST::FST CHOOSINGMACHINE[AMOUNTLEXEM] = {Integer, String, Function, Declare, Ret
 
 #define AMOUNT_OPERATIONS 11
 #define OPERATIONS_MACHINES \
-FST::FST Braceleft(BRACELEFT); \
-FST::FST Leftbrace(LEFTBRACE);\
-FST::FST Semicolon(SEMICOLON);\
-FST::FST Comma(COMMA);\
-FST::FST Lefthesis(LEFTHESIS);\
-FST::FST Reighthesis(REIGHTHESIS);\
-FST::FST Plus(PLUS);\
-FST::FST Minus(MINUS);\
-FST::FST Star(STAR);\
-FST::FST Dirslash(DIRSLASH);\
-FST::FST Equals(EQUALS);\
+FST::FST Braceleft(PARSE_BRACELEFT); \
+FST::FST Leftbrace(PARSE_LEFTBRACE);\
+FST::FST Semicolon(PARSE_SEMICOLON);\
+FST::FST Comma(PARSE_COMMA);\
+FST::FST Lefthesis(PARSE_LEFTHESIS);\
+FST::FST Reighthesis(PARSE_REIGHTHESIS);\
+FST::FST Plus(PARSE_PLUS);\
+FST::FST Minus(PARSE_MINUS);\
+FST::FST Star(PARSE_STAR);\
+FST::FST Dirslash(PARSE_DIRSLASH);\
+FST::FST Equals(PARSE_EQUALS);\
 FST::FST CHOOSING_OPERATION[AMOUNT_OPERATIONS] = { Braceleft,Leftbrace, Semicolon,Comma, Lefthesis, Reighthesis, Plus, Minus, Star, Dirslash,Equals};
-bool changingMachine(char* word, In::IN in , LT::LexTable& lextable, IT::IdTable& idtable, FST::FST machine, int kindOfMachine);
-void inputToIdTable(IT::IdTable& idtable,In::IN in, IT::IDDATATYPE dataType, char* word, bool* isTypeOfId);
-void inputToIdTable(IT::IdTable& idtable,In::IN in ,IT::IDDATATYPE dataType, char* word, IT::IDTYPE);
+bool changingMachine(char* word, In::IN& in, LT::LexTable& lextable, IT::IdTable& idtable, FST::FST machine, int kindOfMachine);
+void inputToIdTable(IT::IdTable& idtable,LT::LexTable&,In::IN& in, IT::IDDATATYPE dataType, char* word, bool* isTypeOfId);
+void inputToIdTable(IT::IdTable& idtable,LT::LexTable&,In::IN& in ,IT::IDDATATYPE dataType, char* word, IT::IDTYPE);
 void DefineScope(IT::Entry&, bool*);
-void inputToLexTable(LT::LexTable& lextable, In::IN in, char lexem);
+void inputToLexTable(LT::LexTable& lextable, In::IN in, char lexem, int);
 IT::IDTYPE typeofId(bool* isTypeOfId);
 void defineIdName(IT::Entry&, char*);
-char* inputWord(int sizeText, int wordSize);

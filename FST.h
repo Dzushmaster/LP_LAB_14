@@ -31,8 +31,8 @@ namespace FST
 	};
 	bool execute(FST& fst);
 }
-void choiceOfMachines(int wordSize, In::IN in, LT::LexTable& lextable, IT::IdTable& idtable);
-void choiceOfMachines(char symbol, In::IN in, LT::LexTable& lextable, IT::IdTable& idtable);
+void choiceOfMachines(int wordSize, In::IN& in, LT::LexTable& lextable, IT::IdTable& idtable);
+void choiceOfMachines(char symbol, In::IN& in, LT::LexTable& lextable, IT::IdTable& idtable);
 
 
 

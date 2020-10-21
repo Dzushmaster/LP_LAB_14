@@ -25,10 +25,28 @@ std::ofstream CreateFileForText()
 	return Filestream;
 }
 
-void PrintText(In::IN in)
+void PrintText(In::IN in, LT::LexTable lextable, IT::IdTable idtable)
 {
 	std::ofstream stream = CreateFileForText();
-	//вывод id из таблицы идентификаторов
+	stream << "Обработанный текст\n";
+	int line = 0;
+	stream << ++line << " ";
+	for (int i = 0; i < lextable.size; i++)
+	{
+		if (lextable.table[i].lexema == LEX_ID || lextable.table[i].lexema == LEX_LITERAL)
+		{
+			stream << lextable.table[i].lexema;
+			stream << '[' << lextable.table[i].idxTI << ']';
+			continue;
+		}
+		if (lextable.table[i].lexema == LINE_BREAK)
+		{
+			stream << '\n';
+			stream << ++line << " ";
+			continue;
+		}
+		stream << lextable.table[i].lexema;
+	}
 }
 void PrintLTTable(LT::LexTable lextable)
 {
@@ -46,6 +64,7 @@ void PrintLTTable(LT::LexTable lextable)
 		stream << lextable.table[i].sn;
 		stream << '\n';
 	}
+	stream.close();
 }
 void PrintIDTable(IT::IdTable idtable)
 {
@@ -53,22 +72,24 @@ void PrintIDTable(IT::IdTable idtable)
 	stream << "Размер таблицы идентификаторов: ";
 	stream << idtable.size;
 	stream << "\n";
-	stream << "Номер идентификатора -> Идентификатор -> Тип данных -> Тип идентификатора -> Нечто -> Значение\n";
+	stream << "Номер идентификатора -> Идентификатор -> Тип данных -> Тип идентификатора -> Строка в тексте -> Значение\n";
 	for (int i = 0; i < idtable.size; i++)//исправить вывод в файл(если нет id, не выводить id)
 	{
 		stream.width(5);
 		stream << i + 1;
 		PrintPrefix(idtable.table[i], stream);
+		stream << idtable.table[i].id;
 		stream.width(22);
 		stream << ReturnIddatatype(idtable.table[i].iddatatype);
 		stream.width(20);
 		stream << ReturnIdType(idtable.table[i].idtype);
 		stream.width(10);
 		stream << idtable.table[i].idxfirstLE;
-		stream.width(10);
-		stream << ReturnValue(idtable.table[i]);
+		stream.width(30);
+		InputValue(idtable.table[i],stream);
 		stream << '\n';
 	}
+	stream.close();
 }
 void PrintNameId(IT::Entry currentElem,std::ofstream& stream)
 {
@@ -86,22 +107,20 @@ void PrintPrefix(IT::Entry currentElem, std::ofstream& stream)
 		stream << "::";
 	}
 	else
-		stream.width(20);
+	{
+		stream.width(22);
+		stream << "";
+	}
 	PrintNameId(currentElem, stream);
 }
-//const char* PrintPrefix(IT::IdTable idtable)
-//{
-//	if (idtable.table->prefix == NULL)
-//		return "";
-//	
-//	return ;
-//}
 const char* ReturnIddatatype(IT::IDDATATYPE datatype)
 {
 	if (datatype == IT::IDDATATYPE::INT)
 		return "integer";
 	if (datatype == IT::IDDATATYPE::STR)
 		return "string";
+	throw ERROR_THROW(126);
+	//throw неопределенный тип данных
 }
 const char* ReturnIdType(IT::IDTYPE idtype)
 {
@@ -118,26 +137,23 @@ const char* ReturnIdType(IT::IDTYPE idtype)
 	case 5:
 		return "outside function";
 	}
+	throw ERROR_THROW(127);
+	//throw неопределенный тип идентификатора 
 }
-bool checkFunc_Par(IT::Entry value)
+void InputValue(IT::Entry value, std::ofstream& stream)
 {
-	return (IT::F == value.idtype || IT::P == value.idtype || IT::O == value.idtype);
-}
-const char* ReturnValue(IT::Entry value)
-{
-	if (IT::F != value.idtype)
+	if (value.idtype == IT::IDTYPE::F || value.idtype == IT::IDTYPE::O)
 	{
-		if (value.value.vint == TI_INT_DEFAULT)
-			return "0";
-		if (value.value.vint != TI_INT_DEFAULT)//проверить
-		{
-			char symb[11];
-			_itoa_s(value.value.vint, symb, 10);
-			return symb;
-		}
-		if (strcmp(value.value.vstr->str,NULL) == 0)
-			return "0";
-		return value.value.vstr->str;
+		stream << "";
+		return;
 	}
-	return "";
+	if (value.iddatatype == IT::IDDATATYPE::INT && value.idtype!=IT::IDTYPE::P)
+	{
+		char symb[11];
+		_itoa_s(value.value.vint, symb, 10);
+		stream << symb;
+		return;
+	}
+	if (value.iddatatype == IT::IDDATATYPE::STR && value.idtype !=IT::IDTYPE::P)
+		stream << value.value.vstr->str;
 }

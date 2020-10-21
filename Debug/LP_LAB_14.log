@@ -1,9 +1,10 @@
-﻿Сборка начата 15.10.2020 3:06:41.
+﻿Сборка начата 21.10.2020 17:30:32.
 Уровень детализации журнала: Normal.     1>Проект "D:\Языки программирования лабы\LPLAB_14\LP_LAB_14\LP_LAB_14.vcxproj" в узле 2 (целевые объекты Build).
      1>InitializeBuildStatus:
          Создание "Debug\LP_LAB_14.tlog\unsuccessfulbuild", так как было задано "AlwaysCreate".
        ClCompile:
-         Для всех выходных данных обновления не требуется.
+         C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.27.29110\bin\HostX86\x86\CL.exe /c /ZI /JMC /nologo /W3 /WX- /diagnostics:column /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /permissive- /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc142.pdb" /Gd /TP /analyze- /FC /errorReport:prompt PrintTables.cpp
+         PrintTables.cpp
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.27.29110\bin\HostX86\x86\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Языки программирования лабы\LPLAB_14\LP_LAB_14\Debug\LP_LAB_14.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG:FASTLINK /PDB:"D:\Языки программирования лабы\LPLAB_14\LP_LAB_14\Debug\LP_LAB_14.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Языки программирования лабы\LPLAB_14\LP_LAB_14\Debug\LP_LAB_14.lib" /MACHINE:X86 Debug\Error.obj
          Debug\FilingInTables.obj
@@ -26,4 +27,4 @@
     Предупреждений: 0
     Ошибок: 0
 
-Прошло времени 00:00:00.40
+Прошло времени 00:00:01.40

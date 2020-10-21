@@ -88,7 +88,7 @@ void Log::WriteError(LOG Log, Error::ERROR error)
 	{
 		*Log.stream << "\nОшибка " << error.id << ": " << error.message;
 		if (error.inext.col > -1 && error.inext.line > -1)
-			std::cout << ", строка " << error.inext.line << ", позиция " << error.inext.col;
+			*Log.stream << ", строка " << error.inext.line << ", позиция " << error.inext.col;
 	}
 }
 void Log::Close(LOG Log)

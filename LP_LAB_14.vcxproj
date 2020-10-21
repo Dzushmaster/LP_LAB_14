@@ -167,6 +167,7 @@
     <Text Include="C:\in.txt" />
     <Text Include="Table_Of_Identificators.txt" />
     <Text Include="Table_Of_Lexem.txt" />
+    <Text Include="Text_After_Lex.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

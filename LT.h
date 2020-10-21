@@ -19,17 +19,17 @@
 #define LEX_BRACELEFT '}'
 #define LEX_LEFTHESIS '('
 #define LEX_REIGHTHESIS ')'
-#define LEX_PLUS '+'
-#define LEX_MINUS '-'
-#define LEX_STAR '*'
-#define LEX_DIRSLASH '/'
-#define LEX_EQUALS '='
+#define PLUS "+"
+#define MINUS "-"
+#define STAR "*"
+#define DIRSLASH "/"
 #define LEX_MAIN 'm'
-//#define LEX_PLUS 'v'
-//#define LEX_MINUS 'v'
-//#define LEX_STAR 'v'
-//#define LEX_DIRSLASH 'v'				//лексема для /
-//#define LEX_EQUALS 'v'
+#define LEX_PLUS 'v'
+#define LEX_MINUS 'v'
+#define LEX_STAR 'v'
+#define LEX_DIRSLASH 'v'				//лексема для /
+#define LEX_EQUALS '='
+#define LINE_BREAK '|'
 
 //подключить в in эту библиотеку и если символ не нужно разбирать, то просто записать эту лексему
 namespace LT//таблица лексем

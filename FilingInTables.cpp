@@ -2,11 +2,32 @@
 #include "IT.h"
 #include "LT.h"
 #include "PrintTables.h"
-//char* inputWord()
+int checkIndEntry(IT::IdTable& idtable, char* word)//во время проверки этой или после вызывать таблицу
+{
+	for (int i = 0; i < idtable.size; i++)
+	{
+		if (IT::IsId(idtable.table[i], word))
+			return i;
+		if (IT::IsOtherFunc(idtable.table[i], word))
+			return i;
+	}
+	return -1;
+}
+//bool checkArithmeticSymbol(LT::Entry& lextable, char*symbol)
 //{
-//
+//	if(strncmsymbol)
 //}
-void inputToIdTable(IT::IdTable& idtable,In::IN in, IT::IDDATATYPE dataType, char* word, bool* IntStrFunVarMain)
+//void inputArithmeticSymbol(LT::Entry& lextable, char symbol)
+//{
+//	lextable.arithmeticSymbol = symbol;
+//}
+//bool checkRepeatedInd(bool*IntStrFuncVarMain)
+//{
+//	if (IntStrFuncVarMain[3] || IntStrFuncVarMain[2])
+//		return true;
+//	return false;
+//}
+void inputToIdTable(IT::IdTable& idtable,LT::LexTable& lextable,In::IN& in, IT::IDDATATYPE dataType, char* word, bool* IntStrFunVarMain)
 {
 	IT::Entry partOfTable;
 	partOfTable.iddatatype = dataType;
@@ -18,11 +39,10 @@ void inputToIdTable(IT::IdTable& idtable,In::IN in, IT::IDDATATYPE dataType, cha
 		partOfTable.value.vstr->ken = 0;
 		partOfTable.value.vstr->str[0] = TI_STR_DEFAULT;
 	}
-	else if (IT::F != partOfTable.idtype || IT::O != partOfTable.idtype)
+	else if (IT::F != partOfTable.idtype && IT::O != partOfTable.idtype)
 		partOfTable.value.vint = TI_INT_DEFAULT;
 	DefineScope(partOfTable, IntStrFunVarMain);
 	IT::Add(idtable, partOfTable);
-	//in.textAfterLex[in.sizeAfterLex++] = 'i';
 }
 void defineIdName(IT::Entry& partOfTable, char* word)//заменить переменную, в которую записывается значение
 {
@@ -34,10 +54,8 @@ void defineIdName(IT::Entry& partOfTable, char* word)//заменить переменную, в ко
 		return;
 	}
 	strncpy_s(partOfTable.id, word, ID_MAXSIZE + 1);
-	partOfTable.outsideFunction[0] = '\0';
-
 }
-void inputToIdTable(IT::IdTable& idtable,In::IN in ,IT::IDDATATYPE iddatatype, char* word, IT::IDTYPE idtype)
+void inputToIdTable(IT::IdTable& idtable, LT::LexTable& lextable, In::IN& in, IT::IDDATATYPE iddatatype, char* word, IT::IDTYPE idtype)
 {
 	IT::Entry partOfTable;
 	if (iddatatype == IT::IDDATATYPE::STR)
@@ -47,7 +65,6 @@ void inputToIdTable(IT::IdTable& idtable,In::IN in ,IT::IDDATATYPE iddatatype, c
 	}
 	else
 		partOfTable.value.vint = atoi(word);
-	in.textAfterLex[in.sizeAfterLex++] = 'i';
 	partOfTable.iddatatype = iddatatype;
 	partOfTable.idtype = idtype;
 	partOfTable.id[0] = '\0';
@@ -88,18 +105,17 @@ void DefineScope(IT::Entry& partOfTable, bool* IntStrFunVarMain)
 	strncpy_s(partOfTable.prefix, nameFunction, PREFIX_SIZE);
 }
 
-void inputToLexTable(LT::LexTable& lextable, In::IN in, char lexem)//работает
+void inputToLexTable(LT::LexTable& lextable, In::IN in, char lexem, int idxTI)//работает
 {
 	LT::Entry partOfTable;
-	partOfTable.lexema = lexem;
+ 	partOfTable.lexema = lexem;
 	partOfTable.sn = in.lines;
-	partOfTable.idxTI = lextable.size + 1;
+	partOfTable.idxTI = idxTI;
 	LT::Add(lextable, partOfTable);
-	in.textAfterLex[in.sizeAfterLex++] = lexem;
 }
 
 
-bool changingMachine(char* word, In::IN  line, LT::LexTable& lextable, IT::IdTable& idtable, FST::FST machine, int kindOfMachine)
+bool changingMachine(char* word, In::IN&  in, LT::LexTable& lextable, IT::IdTable& idtable, FST::FST machine, int kindOfMachine)
 {
 	static bool IntStrFunVarMain[5] = { false,false,false,false,false };
 	if (!FST::execute(machine))
@@ -107,91 +123,94 @@ bool changingMachine(char* word, In::IN  line, LT::LexTable& lextable, IT::IdTab
 	switch (kindOfMachine)
 	{
 	case 0:
-		inputToLexTable(lextable, line, LEX_INTEGER);
+		inputToLexTable(lextable, in, LEX_INTEGER, lextable.size + 1);
 		IntStrFunVarMain[0]= true;
 		return true;
 	case 1:
-		inputToLexTable(lextable, line, LEX_STRING);
+		inputToLexTable(lextable, in, LEX_STRING, lextable.size + 1);
 		IntStrFunVarMain[1] = true;
 		return true;
 	case 2:
-		inputToLexTable(lextable, line, LEX_FUNCTION);
+		inputToLexTable(lextable, in, LEX_FUNCTION, lextable.size + 1);
 		IntStrFunVarMain[2] = true;
 		return true;
 	case 3:
-		inputToLexTable(lextable, line, LEX_DECLARE);
+		inputToLexTable(lextable, in, LEX_DECLARE,lextable.size + 1);
 		IntStrFunVarMain[3] = true;
 		return true;
 	case 4:
-		inputToLexTable(lextable, line, LEX_RETURN);
+		inputToLexTable(lextable, in, LEX_RETURN, lextable.size + 1);
 		return true;
 	case 5:
-		inputToLexTable(lextable, line, LEX_PRINT);
+		inputToLexTable(lextable, in, LEX_PRINT, lextable.size + 1);
 		return true;
 	case 6:
-		inputToLexTable(lextable, line, LEX_MAIN);
+		inputToLexTable(lextable, in, LEX_MAIN, lextable.size + 1);
 		IntStrFunVarMain[4] = true;
 		return true;
 	case 7:
-		inputToIdTable(idtable,line ,IT::IDDATATYPE::INT, word, IT::IDTYPE::L);
+		inputToIdTable(idtable,lextable,in ,IT::IDDATATYPE::INT, word, IT::IDTYPE::L);
+		inputToLexTable(lextable, in, LEX_LITERAL, idtable.size);
 		return true;
 	case 8:
-		inputToIdTable(idtable,line ,IT::IDDATATYPE::STR, word, IT::IDTYPE::L);
+		inputToIdTable(idtable,lextable,in ,IT::IDDATATYPE::STR, word, IT::IDTYPE::L);
 		return true;
 	case 9:
 		if (IntStrFunVarMain[0])
 		{
-			inputToIdTable(idtable,line ,IT::IDDATATYPE::INT, word, IntStrFunVarMain);
+			inputToIdTable(idtable,lextable,in ,IT::IDDATATYPE::INT, word, IntStrFunVarMain);
 			IntStrFunVarMain[0] = false;
 			IntStrFunVarMain[2] = false;
 			IntStrFunVarMain[3] = false;
-			return true;
 		}
-		if (IntStrFunVarMain[1])
+		else if (IntStrFunVarMain[1])
 		{
-			inputToIdTable(idtable,line ,IT::IDDATATYPE::STR, word, IntStrFunVarMain);
+			inputToIdTable(idtable,lextable,in ,IT::IDDATATYPE::STR, word, IntStrFunVarMain);
 			IntStrFunVarMain[1] = false;
 			IntStrFunVarMain[2] = false;
 			IntStrFunVarMain[3] = false;
+		}
+		lextable.table[lextable.size].idxTI = checkIndEntry(idtable, word);
+		if (lextable.table[lextable.size].idxTI != -1)
+		{
+			//if (checkRepeatedInd(IntStrFunVarMain))
+			//	throw ERROR_THROW_IN(125, in.lines, in.size);
+			inputToLexTable(lextable, in, LEX_ID, lextable.table[lextable.size].idxTI);
 			return true;
 		}
-		break;
-	
+		return false;
 	case 10:
-		inputToLexTable(lextable, line, LEX_BRACELEFT);
+		inputToLexTable(lextable, in, LEX_BRACELEFT, lextable.size + 1);
 		return true;
 	case 11:
-		inputToLexTable(lextable, line, LEX_LEFTBRACE);
+		inputToLexTable(lextable, in, LEX_LEFTBRACE, lextable.size + 1);
 		return true;
 	case 12:
-		inputToLexTable(lextable, line, LEX_SEMICOLON);
+		inputToLexTable(lextable, in, LEX_SEMICOLON, lextable.size + 1);
 		return true;
 	case 13:
-		inputToLexTable(lextable, line, LEX_COMMA);
+		inputToLexTable(lextable, in, LEX_COMMA, lextable.size + 1);
 		return true;
 	case 14:
-		inputToLexTable(lextable, line, LEX_LEFTHESIS);
+		inputToLexTable(lextable, in, LEX_LEFTHESIS, lextable.size + 1);
 		return true;
 	case 15:
-		inputToLexTable(lextable, line, LEX_REIGHTHESIS);
+		inputToLexTable(lextable, in, LEX_REIGHTHESIS, lextable.size + 1);
 		return true;
 	case 16:
-		inputToLexTable(lextable, line, LEX_PLUS);
+		inputToLexTable(lextable, in, LEX_PLUS, lextable.size + 1);
 		return true;
 	case 17:
-		inputToLexTable(lextable, line, LEX_MINUS);
+		inputToLexTable(lextable, in, LEX_MINUS,lextable.size + 1);
 		return true;
 	case 18:
-		inputToLexTable(lextable, line, LEX_STAR);
+		inputToLexTable(lextable, in, LEX_STAR, lextable.size + 1);
 		return true;
 	case 19:
-		inputToLexTable(lextable, line, LEX_DIRSLASH);
+		inputToLexTable(lextable, in, LEX_DIRSLASH, lextable.size + 1);
 		return true;
 	case 20:
-		inputToLexTable(lextable, line, LEX_EQUALS);
+		inputToLexTable(lextable, in, LEX_EQUALS, lextable.size + 1);
 		return true;
-	default:
-		throw ERROR_THROW_IN(124, line.lines, line.size);
-		break;
 	}
 }

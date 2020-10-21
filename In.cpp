@@ -6,6 +6,13 @@
 
 using namespace In;
 //если нельз€ разобрать автоматом, то идентификатор
+void FillingTheWord(In::IN in, int wordSize, char*word)
+{
+	int indexStartFilling = in.size - wordSize;
+	for (int i = 0; i < wordSize; i++)
+		word[i] = in.text[indexStartFilling+i];
+	word[wordSize-1] = '\0';
+}
 IN In::getin(wchar_t inFile[],LT::LexTable& lextable, IT::IdTable& idtable)
 {
 	std::ifstream FileIn(inFile);
@@ -14,7 +21,7 @@ IN In::getin(wchar_t inFile[],LT::LexTable& lextable, IT::IdTable& idtable)
 	unsigned char Uch;
 	IN in;
 	in.text = new unsigned char[IN_MAX_LEN_TEXT];
-	int CurrentPosition = 0;
+	in.textAfterLex = new unsigned char[IN_MAX_LEN_TEXT];
 	int wordSize = 0;
 	for (;;)//проверка символов на разрешенность
 	{
@@ -30,7 +37,7 @@ IN In::getin(wchar_t inFile[],LT::LexTable& lextable, IT::IdTable& idtable)
 		{
 			Error::ERROR x;
 			x.inext.line = in.lines;
-			x.inext.col = CurrentPosition;
+			x.inext.col = in.currentPosition;
 			throw ERROR_THROW_IN(111, x.inext.line, x.inext.col);
 			break;
 		}
@@ -49,7 +56,7 @@ IN In::getin(wchar_t inFile[],LT::LexTable& lextable, IT::IdTable& idtable)
 			isSpace = false;
 			isWord = true;
 			in.size++;
-			CurrentPosition++;
+			in.currentPosition++;
 			continue;
 		}
 		case IN::S:
@@ -64,7 +71,7 @@ IN In::getin(wchar_t inFile[],LT::LexTable& lextable, IT::IdTable& idtable)
 				isWord = false;
 				isSpace = true;
 				in.text[in.size++] = Uch;
-				CurrentPosition++;
+				in.currentPosition++;
 			}
 			if (isExpression)
 				in.size--;
@@ -73,9 +80,8 @@ IN In::getin(wchar_t inFile[],LT::LexTable& lextable, IT::IdTable& idtable)
 		case IN::E://¬ыражени€
 		{
 			isWord = false;
-			isSpace ? (in.text[in.size - 1] = Uch, isSpace = false, in.ignor++) : (in.text[in.size] = Uch, CurrentPosition++, in.size++);
+			isSpace ? (in.text[in.size - 1] = Uch, isSpace = false, in.ignor++) : (in.text[in.size] = Uch, in.currentPosition++, in.size++);
 			isExpression = true;
-			choiceOfMachines((char)Uch, in, lextable, idtable);
 			break;
 		}
 		case IN::Q:
@@ -97,25 +103,32 @@ IN In::getin(wchar_t inFile[],LT::LexTable& lextable, IT::IdTable& idtable)
 					break;
 				}
 				else if (Uch == '\n' && !isQuote)
-					throw ERROR_THROW_IN(105, in.lines, CurrentPosition);
+					throw ERROR_THROW_IN(105, in.lines, in.currentPosition);
 			}
 			char* word = new char[sizeOfSTRLiteral];
-			
-			inputToIdTable(idtable, in, IT::IDDATATYPE::STR, word, IT::IDTYPE::L);
-			delete[]word;
+			FillingTheWord(in, sizeOfSTRLiteral, word);
+			inputToIdTable(idtable,lextable, in, IT::IDDATATYPE::STR, word, IT::IDTYPE::L);
+			inputToLexTable(lextable, in, LEX_LITERAL, idtable.size);
+			delete[] word;
 			break;
 		}
 		default:
 			in.text[in.size] = in.code[Uch];
+			lextable.table[lextable.size].sn = in.lines;
+			lextable.table[lextable.size].idxTI = lextable.size+1;
+			lextable.table[lextable.size++].lexema = LINE_BREAK;
 			in.lines++;
-			CurrentPosition = 0;
+			in.currentPosition = 0;
 			in.size++;
+			isExpression = false;
 			isWord = false;
 			break;
 		}
 		if (!isWord)
 		{
-			choiceOfMachines(wordSize,in, lextable, idtable);//дл€ выбора автоматов
+			choiceOfMachines(wordSize,in, lextable, idtable);//дл€ выбора автоматов	
+			if(isExpression && Uch!=' ')
+				choiceOfMachines((char)Uch, in, lextable, idtable);
 			wordSize = 0;
 		}
 	}

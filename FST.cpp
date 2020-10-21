@@ -66,9 +66,9 @@ namespace FST
 		return (rc ? (fst.rstates[fst.nstates - 1] == lstring) : rc);
 	}
 }
-void choiceOfMachines(int wordSize, In::IN in, LT::LexTable& lextable, IT::IdTable& idtable)//переработать функцию
+void choiceOfMachines(int wordSize, In::IN& in, LT::LexTable& lextable, IT::IdTable& idtable)//переработать функцию
 {
-	// если есть цифра - литерал, если есть кавычка, тоже литерал
+	bool Disassembled = false;
 	char* word = new char[wordSize+1];
 	short sizeofText = in.size - wordSize-1;
 	for (int i = 0; i <= wordSize; i++)
@@ -78,15 +78,15 @@ void choiceOfMachines(int wordSize, In::IN in, LT::LexTable& lextable, IT::IdTab
 	word[wordSize] = '\0';
 	if (!word[0])
 		return;
-	//просто в статическую переменную
-	bool Disassembled = false;
 	ALL_MACHINES;
 	for (int kindOfMachine = 0; kindOfMachine < AMOUNTLEXEM && !Disassembled; kindOfMachine++)
 	{
 		Disassembled = changingMachine(word,in,lextable,idtable,CHOOSINGMACHINE[kindOfMachine],kindOfMachine);
 	}
+	if (!Disassembled)
+		throw ERROR_THROW_IN(124,in.currentPosition , in.lines);
 }
-void choiceOfMachines(char symbol, In::IN in, LT::LexTable& lextable, IT::IdTable& idtable)
+void choiceOfMachines(char symbol, In::IN& in, LT::LexTable& lextable, IT::IdTable& idtable)
 {
 	char word[2];
 	word[0] = symbol; word[1] = '\0';
@@ -96,4 +96,6 @@ void choiceOfMachines(char symbol, In::IN in, LT::LexTable& lextable, IT::IdTabl
 	{
 		Disassembled = changingMachine(word, in, lextable, idtable, CHOOSING_OPERATION[kindOfExpression], kindOfExpression + AMOUNTLEXEM);
 	}
+	if (!Disassembled)
+		throw ERROR_THROW_IN(124,in.currentPosition,in.lines);
 }

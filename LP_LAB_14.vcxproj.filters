@@ -91,5 +91,8 @@
     <Text Include="C:\in.txt">
       <Filter>Файлы ресурсов</Filter>
     </Text>
+    <Text Include="Text_After_Lex.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
   </ItemGroup>
 </Project>

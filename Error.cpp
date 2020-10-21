@@ -19,7 +19,7 @@ namespace Error
 		ERROR_ENTRY(113,"Ошибка при создании файла таблицы лексем"), ERROR_ENTRY(114,"Ошибка при создании файла таблицы идентификаторов"), ERROR_ENTRY(115,"Превышен размер лексемы"),
 		ERROR_ENTRY(116,"Попытка попасть за пределы заполненной части массива"), ERROR_ENTRY_NODEF(117), ERROR_ENTRY_NODEF(118),ERROR_ENTRY_NODEF(119),
 		ERROR_ENTRY(120,"Отсутствует закрывающая кавычка"),ERROR_ENTRY(121,"Превышен максимальный размер таблицы идентификаторов"), ERROR_ENTRY(122, "Превышен максимальный размер таблицы лексем"), ERROR_ENTRY(123, "Недопустимый символ начала идентификатора"),\
-		ERROR_ENTRY(124,"Невозможно распознать выражение"), ERROR_ENTRY_NODEF10(170), ERROR_ENTRY_NODEF10(180), ERROR_ENTRY_NODEF10(190),
+		ERROR_ENTRY(124,"Невозможно распознать выражение"),ERROR_ENTRY(126,"Попытка вывести неопределенный тип данных"),ERROR_ENTRY(127,"Попытка вывести неопределенный тип идентификатора"), ERROR_ENTRY_NODEF10(170), ERROR_ENTRY_NODEF10(180), ERROR_ENTRY_NODEF10(190),
 		ERROR_ENTRY_NODEF100(200), ERROR_ENTRY_NODEF100(300), ERROR_ENTRY_NODEF100(400), ERROR_ENTRY_NODEF100(500), ERROR_ENTRY_NODEF100(600), ERROR_ENTRY_NODEF100(700), ERROR_ENTRY_NODEF100(800), ERROR_ENTRY_NODEF100(900)
 	};
 }

@@ -5,10 +5,10 @@
 #include "In.h"
 void PrintLTTable(LT::LexTable);
 void PrintIDTable(IT::IdTable);
-void PrintText(In::IN in);
+void PrintText(In::IN in,LT::LexTable lextable, IT::IdTable);
 const char* ReturnIdType(IT::IDTYPE idtype);
 const char* ReturnIddatatype(IT::IDDATATYPE datatype);
-const char* ReturnValue(IT::Entry value);
+void InputValue(IT::Entry value, std::ofstream&);
 void PrintPrefix(IT::Entry value,std::ofstream&);
 void PrintNameId(IT::Entry, std::ofstream&);
 std::ofstream CreateFileForLT();

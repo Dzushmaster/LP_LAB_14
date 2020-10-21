@@ -46,9 +46,10 @@ namespace IT
 		IdTable& idtable,		//экземпляр таблицы идентификаторов
 		int n		//идентификатор
 	);
-	int IsId(					//возврат: номер строки (если есть), TI_NULLIDX(если нет)
-		IdTable& idtable,		//экземпляр таблицы идентификаторов
+	bool IsId(					
+		Entry& elemOfTable,		//экземпляр таблицы идентификаторов
 		char id[ID_MAXSIZE]		//идентификатор
 	);
+	bool IsOtherFunc(Entry&, char id[ID_MAXSIZE]);
 	void Delete(IdTable& idtable);//удалить таблицу лексем(освободить память)
 }

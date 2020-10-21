@@ -32,6 +32,7 @@ int wmain(int argc, wchar_t* argv[])
 		In::IN in = In::getin(parm.in, lextable, idtable);
 		PrintIDTable(idtable);
 		PrintLTTable(lextable);
+		PrintText(in,lextable,idtable);
 		Log::WriteIn(log, in);
 		Out::OUT out = Out::getout(parm.out);
 		Out::WriteAnalyze(out, in, log);
