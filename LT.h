@@ -37,6 +37,7 @@ namespace LT//таблица лексем
 	struct Entry//строка таблицы лексем
 	{
 		char lexema;//лексема
+		char arithmeticSymbol;
 		int sn;						//номер строки в исходном тексте
 		int idxTI;					//индекс в таблице идентификаторов или LT_TI_NULLIDX
 	};

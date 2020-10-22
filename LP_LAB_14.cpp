@@ -2,6 +2,7 @@
 #include <locale>
 #include <cwchar>
 
+#include "PolishNotation.h"
 #include "Error.h"
 #include "Parm.h"
 #include "In.h"
@@ -33,6 +34,7 @@ int wmain(int argc, wchar_t* argv[])
 		PrintIDTable(idtable);
 		PrintLTTable(lextable);
 		PrintText(in,lextable,idtable);
+		workWithPolishNotation(lextable, idtable);
 		Log::WriteIn(log, in);
 		Out::OUT out = Out::getout(parm.out);
 		Out::WriteAnalyze(out, in, log);

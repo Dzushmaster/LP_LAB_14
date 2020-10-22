@@ -13,14 +13,6 @@ int checkIndEntry(IT::IdTable& idtable, char* word)//во время проверки этой или 
 	}
 	return -1;
 }
-//bool checkArithmeticSymbol(LT::Entry& lextable, char*symbol)
-//{
-//	if(strncmsymbol)
-//}
-//void inputArithmeticSymbol(LT::Entry& lextable, char symbol)
-//{
-//	lextable.arithmeticSymbol = symbol;
-//}
 //bool checkRepeatedInd(bool*IntStrFuncVarMain)
 //{
 //	if (IntStrFuncVarMain[3] || IntStrFuncVarMain[2])
@@ -111,6 +103,7 @@ void inputToLexTable(LT::LexTable& lextable, In::IN in, char lexem, int idxTI)//
  	partOfTable.lexema = lexem;
 	partOfTable.sn = in.lines;
 	partOfTable.idxTI = idxTI;
+	partOfTable.arithmeticSymbol = lextable.table[lextable.size].arithmeticSymbol;
 	LT::Add(lextable, partOfTable);
 }
 
@@ -192,21 +185,27 @@ bool changingMachine(char* word, In::IN&  in, LT::LexTable& lextable, IT::IdTabl
 		inputToLexTable(lextable, in, LEX_COMMA, lextable.size + 1);
 		return true;
 	case 14:
+		lextable.table[lextable.size].arithmeticSymbol = LEX_LEFTHESIS;
 		inputToLexTable(lextable, in, LEX_LEFTHESIS, lextable.size + 1);
 		return true;
 	case 15:
+		lextable.table[lextable.size].arithmeticSymbol = LEX_REIGHTHESIS;
 		inputToLexTable(lextable, in, LEX_REIGHTHESIS, lextable.size + 1);
 		return true;
 	case 16:
+		lextable.table[lextable.size].arithmeticSymbol = '+';
 		inputToLexTable(lextable, in, LEX_PLUS, lextable.size + 1);
 		return true;
 	case 17:
+		lextable.table[lextable.size].arithmeticSymbol = '-';
 		inputToLexTable(lextable, in, LEX_MINUS,lextable.size + 1);
 		return true;
 	case 18:
+		lextable.table[lextable.size].arithmeticSymbol = '*';
 		inputToLexTable(lextable, in, LEX_STAR, lextable.size + 1);
 		return true;
 	case 19:
+		lextable.table[lextable.size].arithmeticSymbol = '/';
 		inputToLexTable(lextable, in, LEX_DIRSLASH, lextable.size + 1);
 		return true;
 	case 20:
